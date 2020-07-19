@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-3206298403654497475
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b26c860a1d88df49b9d544b932dee5a, type: 3}
+  m_Name: GaussianBlur
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  destination:
+    m_OverrideState: 0
+    m_Value: 0
+  filterMode:
+    m_OverrideState: 0
+    m_Value: 1
+  blurCount:
+    m_OverrideState: 1
+    m_Value: 2
+    min: 1
+    max: 4
+  downSample:
+    m_OverrideState: 1
+    m_Value: 3
+    min: 1
+    max: 4
+  indensity:
+    m_OverrideState: 1
+    m_Value: 16.61
+    min: 0
+    max: 20
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
+  m_Name: Global Volume Profile 1
+  m_EditorClassIdentifier: 
+  components:
+  - {fileID: -3206298403654497475}
