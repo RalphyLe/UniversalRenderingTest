@@ -11,20 +11,21 @@ namespace UnityEngine.Experiemntal.Rendering.Universal
         public RenderPassEvent evt = RenderPassEvent.AfterRenderingTransparents;
         public AdditionalPostProcessData postData;
         AdditionPostProcessPass postPass;
-        public string textureId = "_BlurPassTexture";
+
         public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
         {
-            var src = renderer.cameraColorTarget;
+            var cameraColorTarget = renderer.cameraColorTarget;
+            var cameraDepth = renderer.cameraDepth;
             var dest = RenderTargetHandle.CameraTarget;
             if (postData == null)
                 return;
-            postPass.Setup(src,postData, dest);
+            postPass.Setup(evt, cameraColorTarget, cameraDepth, dest, postData);
             renderer.EnqueuePass(postPass);
         }
 
         public override void Create()
         {
-            postPass = new AdditionPostProcessPass(evt);
+            postPass = new AdditionPostProcessPass();
         }
     }
 }

@@ -11,12 +11,12 @@ namespace UnityEngine.Experiemntal.Rendering.Universal
     /// </summary>
     public class AdditionPostProcessPass : ScriptableRenderPass
     {
-        RenderTextureDescriptor m_Descriptor;
-        RenderTargetHandle m_Source;
-        RenderTargetIdentifier m_Identifier;
+        /// <summary>
+        /// 高斯模糊
+        /// </summary>
+        RenderTargetIdentifier m_ColorAttachment;
+        RenderTargetIdentifier m_CameraDepthAttachment;
         RenderTargetHandle m_Destination;
-        RenderTargetHandle m_Depth;
-        RenderTargetHandle m_InternalLut;
 
         const string k_RenderPostProcessingTag = "Render AdditionalPostProcessing Effects";
         const string k_RenderFinalPostProcessingTag = "Render Final AdditionalPostProcessing Pass";
@@ -33,14 +33,10 @@ namespace UnityEngine.Experiemntal.Rendering.Universal
 
         RenderTargetHandle m_TemporaryColorTexture03;
 
-        public AdditionPostProcessPass(RenderPassEvent evt)
+        public AdditionPostProcessPass()
         {
-            renderPassEvent = evt;
-
             m_TemporaryColorTexture01.Init("_TemporaryColorTexture1");
-
             m_TemporaryColorTexture02.Init("_TemporaryColorTexture2");
-
             m_TemporaryColorTexture03.Init("_TemporaryColorTexture3");
         }
 
@@ -54,22 +50,21 @@ namespace UnityEngine.Experiemntal.Rendering.Universal
             CommandBufferPool.Release(cmd);
         }
 
-        public void Setup(RenderTargetIdentifier source, AdditionalPostProcessData data, RenderTargetHandle destination)
+        public void Setup(RenderPassEvent @event, RenderTargetIdentifier source,RenderTargetIdentifier cameraDepth, RenderTargetHandle destination, AdditionalPostProcessData data)
         {
             m_Data = data;
+            renderPassEvent = @event;
+            m_ColorAttachment = source;
+            m_CameraDepthAttachment = cameraDepth;
+            m_Destination = destination;
             m_Materials = new MaterialLibrary(data);
-            this.m_Identifier = source;
-            this.m_Destination = destination;
         }
 
         void Render(CommandBuffer cmd,ref RenderingData renderingData)
         {
-            int width = renderingData.cameraData.cameraTargetDescriptor.width;
-            int height = renderingData.cameraData.cameraTargetDescriptor.height;
             ref var cameraData = ref renderingData.cameraData;
             if (m_GaussianBlur.IsActive() && !cameraData.isSceneViewCamera)
             {
-                Debug.Log("高斯模糊");
                 SetupGaussianBlur(cmd, ref renderingData, m_Materials.gaussianBlur);
             }
         }
@@ -83,17 +78,17 @@ namespace UnityEngine.Experiemntal.Rendering.Universal
             cmd.GetTemporaryRT(m_TemporaryColorTexture01.id, opaqueDesc, m_GaussianBlur.filterMode.value);
             cmd.GetTemporaryRT(m_TemporaryColorTexture02.id, opaqueDesc, m_GaussianBlur.filterMode.value);
             cmd.GetTemporaryRT(m_TemporaryColorTexture03.id, opaqueDesc, m_GaussianBlur.filterMode.value);
-            cmd.BeginSample("Blur");
-            cmd.Blit(this.m_Identifier, m_TemporaryColorTexture03.Identifier());
+            cmd.BeginSample("GaussianBlur");
+            cmd.Blit(this.m_ColorAttachment, m_TemporaryColorTexture03.Identifier());
             for (int i = 0; i < m_GaussianBlur.blurCount.value; i++)
             {
                 blurMaterial.SetVector("_offsets", new Vector4(0, m_GaussianBlur.indensity.value, 0, 0));
                 cmd.Blit(m_TemporaryColorTexture03.Identifier(), m_TemporaryColorTexture01.Identifier(), blurMaterial);
                 blurMaterial.SetVector("_offsets", new Vector4(m_GaussianBlur.indensity.value, 0, 0, 0));
                 cmd.Blit(m_TemporaryColorTexture01.Identifier(), m_TemporaryColorTexture02.Identifier(), blurMaterial);
-                cmd.Blit(m_TemporaryColorTexture02.Identifier(), m_TemporaryColorTexture03.Identifier());
+                cmd.Blit(m_TemporaryColorTexture02.Identifier(), m_ColorAttachment);
             }
-            cmd.Blit(m_TemporaryColorTexture03.Identifier(), this.m_Identifier);
+            cmd.Blit(m_TemporaryColorTexture03.Identifier(), this.m_Destination.Identifier());
             cmd.EndSample("Blur");
         }
     }

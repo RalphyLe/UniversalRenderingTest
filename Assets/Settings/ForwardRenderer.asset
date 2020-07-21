@@ -15,7 +15,6 @@ MonoBehaviour:
   m_Active: 1
   evt: 500
   postData: {fileID: 11400000, guid: b294a5b05c89cd8428e5a9904b55f2fb, type: 2}
-  textureId: _BlurPassTexture
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
