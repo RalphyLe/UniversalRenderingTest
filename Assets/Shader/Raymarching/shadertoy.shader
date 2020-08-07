@@ -12,7 +12,8 @@
 	HLSLINCLUDE
 
 	    #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-        //#include "Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/Common.hlsl"
+        #include "DistanceFunctions.hlsl"
+		//#include "Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/Common.hlsl"
 
         CBUFFER_START(UnityPerMaterial)
             float4 _MainTex_ST;
@@ -29,9 +30,6 @@
         struct v2f_blur{
 	    	float4 pos : SV_POSITION;
             float2 uv : TEXCOORD0;
-	    	float4 uv01 : TEXCOORD1;
-	    	float4 uv23 : TEXCOORD2;
-	    	float4 uv45 : TEXCOORD3;
             UNITY_VERTEX_OUTPUT_STEREO
 	    };
 
@@ -47,18 +45,40 @@
             UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 	    	o.pos = TransformObjectToHClip(v.positionOS.xyz);
 	    	o.uv = v.uv;
-            _offsets *= _MainTex_TexelSize.xyxy;
-            o.uv01 = v.uv.xyxy + _offsets.xyxy * float4(1, 1, -1, -1);
-	    	o.uv23 = v.uv.xyxy + _offsets.xyxy * float4(1, 1, -1, -1) * 2.0;
-	    	o.uv45 = v.uv.xyxy + _offsets.xyxy * float4(1, 1, -1, -1) * 3.0;
-
 	    	return o;
 	    }
+
+		float4 GetWorldPos(float2 uv){
+			float2 trans = uv*2 - float2(1,1);
+			float4 clip = float4(trans,0,1);
+			float4 view_pos = mul(UNITY_MATRIX_I_VP,clip);
+			float4 world_pos = mul(unity_CameraToWorld,view_pos);
+			return world_pos;
+		}
+
+		float4 raymarching(float3 origin,float3 normalview,float r){
+			float t = 0;
+			float4 result = float4(0,0,0,0);
+			for(int i=1;i<255;i++){
+				float3 p = origin + normalview*t;
+				float d = sdSphere(p,r);
+				if(d<0.01f){
+					result = float4(1,0,0,1);
+					break;
+				}
+				t+=d;
+			}
+
+			return result;
+		}
 
 	    //fragment shader
 	    float4 frag_blur(v2f_blur i) : SV_Target
 	    {
-	    	half4 color = half4(i.uv,0,1);
+	    	float4 pos = GetWorldPos(i.uv);
+			float3 origin = _WorldSpaceCameraPos;
+			float3 dir = pos.xyz -origin;
+			float4 color = raymarching(origin,normalize(dir),1.0);
 	    	return color;
 	    }
 
@@ -70,6 +90,7 @@
         Tags {"RenderType"="Opaque" "RenderPipeline"="UniversalPipeline"}
         LOD 100
 		ZTest Always Cull Off ZWrite Off
+		Blend SrcAlpha OneMinusSrcAlpha
 
         Pass
 		{
