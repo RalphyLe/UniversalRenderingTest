@@ -1,8 +1,6 @@
 ﻿#ifndef CUSTOM_UNITY_SHADERTOY_2_URP_INCLUDE
 #define CUSTOM_UNITY_SHADERTOY_2_URP_INCLUDE
 
-#include "Packages/com.unity.render-piplines.universal/ShaderLibrary/UnityInput.hlsl"
-
 #define vec2 float2
 #define vec3 float3
 #define vec4 float4
@@ -15,7 +13,6 @@
 #define fract frac
 #define texture2D tex2D
 #define iResolution _ScreenParams
-#define gl_FragCoord((_iParam.scrPos.xy/_iParam.scrPos.w)*_ScreenParams.xy)
 
 #define PI2 6.28318530718
 #define pi 3.14159265358979

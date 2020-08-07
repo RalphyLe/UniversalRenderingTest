@@ -7,13 +7,14 @@ using UnityEditor.ProjectWindowCallback;
 #endif
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Rendering;
+using System.IO;
 
 namespace UnityEngine.Experiemntal.Rendering.Universal
 {
     [Serializable]
     public class AdditionalPostProcessData : ScriptableObject
     {
-
+        public const string root = "D:/unityproject/urp test/Assets";
 #if UNITY_EDITOR
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812")]
 
@@ -26,11 +27,12 @@ namespace UnityEngine.Experiemntal.Rendering.Universal
             Selection.activeObject = instance;
         }
 #endif
-        [Serializable]
-        public sealed class Shaders
+        [Serializable, ReloadGroup]
+        public sealed class ShaderResources
         {
-            public Shader gaussianBlur = Shader.Find("Custom/GaussianBlur");
+            [Reload(root + "/Shader/GaussianBlur.shader",ReloadAttribute.Package.Builtin)]
+            public Shader gaussianBlur;
         }
-        public Shaders shaders;
+        public ShaderResources shaders;
     }
 }

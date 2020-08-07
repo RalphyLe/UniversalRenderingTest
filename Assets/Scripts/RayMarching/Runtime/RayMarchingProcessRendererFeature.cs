@@ -20,7 +20,7 @@ namespace UnityEngine.Rendering.Universal.RayMarching
             var dest = RenderTargetHandle.CameraTarget;
             if (postData == null)
                 return;
-            postPass.Setup(evt, renderer, renderingData, postData);
+            postPass.Setup(evt, cameraColorTarget, dest, postData);
             renderer.EnqueuePass(postPass);
         }
 

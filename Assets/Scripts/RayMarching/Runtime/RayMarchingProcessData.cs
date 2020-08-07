@@ -13,7 +13,7 @@ namespace UnityEngine.Rendering.Universal.RayMarching
     [Serializable]
     public class RayMarchingProcessData : ScriptableObject
     {
-
+        public const string root = "D:/unityproject/urp test/Assets";
 #if UNITY_EDITOR
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812")]
 
@@ -26,11 +26,13 @@ namespace UnityEngine.Rendering.Universal.RayMarching
             Selection.activeObject = instance;
         }
 #endif
-        [Serializable]
-        public sealed class Shaders
+        [Serializable, ReloadGroup]
+        public sealed class ShaderResources
         {
-            public Shader raymarch = Shader.Find("Custom/RayMarching/shadertoy");
+            [Reload(root + "/Shader/RayMarching/shadertoy.shader", ReloadAttribute.Package.Builtin)]
+            public Shader raymarch;
         }
-        public Shaders shaders;
+
+        public ShaderResources shaders;
     }
 }

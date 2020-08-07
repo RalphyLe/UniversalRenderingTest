@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8139203598343052678
+--- !u!114 &-8308189931114977762
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -14,7 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   evt: 500
-  postData: {fileID: 11400000, guid: b294a5b05c89cd8428e5a9904b55f2fb, type: 2}
+  postData: {fileID: 0}
+--- !u!114 &-2894023021837572089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bf138ab66f3d485381a8d140011e409, type: 3}
+  m_Name: NewRayMarchingProcessRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  evt: 600
+  postData: {fileID: 11400000, guid: 61190ebe58fad4a6fb41289b5ef3331b, type: 2}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28,8 +43,9 @@ MonoBehaviour:
   m_Name: ForwardRenderer
   m_EditorClassIdentifier: 
   m_RendererFeatures:
-  - {fileID: -8139203598343052678}
-  m_RendererFeatureMap: 7a622e5e73bd0b8f
+  - {fileID: -2894023021837572089}
+  - {fileID: -8308189931114977762}
+  m_RendererFeatureMap: 07a89113655dd6d71e266abd4661b38c
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   shaders:
     blitPS: {fileID: 4800000, guid: c17132b1f77d20942aa75f8429c0f8bc, type: 3}

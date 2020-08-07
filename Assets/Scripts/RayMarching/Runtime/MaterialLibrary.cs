@@ -12,7 +12,7 @@ namespace UnityEngine.Rendering.Universal.RayMarching
 
         public MaterialLibrary(RayMarchingProcessData data)
         {
-            rayMarching = Load(data.shaders.raymarch);
+            rayMarching = Load(Shader.Find("Custom/RayMarching/shadertoy"));
         }
 
         Material Load(Shader shader)

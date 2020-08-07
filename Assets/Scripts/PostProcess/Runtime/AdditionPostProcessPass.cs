@@ -89,7 +89,7 @@ namespace UnityEngine.Experiemntal.Rendering.Universal
                 cmd.Blit(m_TemporaryColorTexture02.Identifier(), m_ColorAttachment);
             }
             cmd.Blit(m_TemporaryColorTexture03.Identifier(), this.m_Destination.Identifier());
-            cmd.EndSample("Blur");
+            cmd.EndSample("GaussianBlur");
         }
     }
 }

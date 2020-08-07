@@ -2,9 +2,9 @@
 #define CUSTOM_UNITY_RAY_MARCHING_DISTANCE_INCLUDE
 #include "ShaderToy2URP.hlsl"
 
-float dot2(in float2 v){return dot(v,v)}
-float dot2(in float3 v){return dot(v,v)}
-float ndot(in float2 a,in float2 b){return a.x*b.x - a.y-b.y}
+float dot2(in float2 v){return dot(v,v);}
+float dot2(in float3 v){return dot(v,v);}
+float ndot(in float2 a,in float2 b){return a.x*b.x - a.y-b.y;}
 
 // Sphere
 // s: radius
@@ -31,7 +31,7 @@ float smin_exp(float a, float b, float k){
 float smin_poly(float a, float b, float k)
 {
     float h = clamp(0.5 + 0.5*(b-a)/k,0.0,1.0);
-    return min(a,b,h) - k*h*(1.0-h);
+    return min(min(a,b),h) - k*h*(1.0-h);
 }
 
 //power smooth min(k = 8);

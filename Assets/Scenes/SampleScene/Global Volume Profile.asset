@@ -204,7 +204,7 @@ MonoBehaviour:
     max: 4
   indensity:
     m_OverrideState: 1
-    m_Value: 1.29
+    m_Value: 0.65
     min: 0
     max: 20
 --- !u!114 &11400000
